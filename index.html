@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>JavaScript Web Worker</title>
+    <script src="main.js"></script>
+  </head>
+  <body>
+    <button onclick="initWorker()">Init Worker</button>
+    <button onclick="startWorker()">Start Worker</button>
+    <button onclick="stopWorker1()">Stop Worker 1</button>
+    <button onclick="stopWorker2()">Stop Worker 2</button>
+
+    <script id="worker1" type="javascript/worker">
+      self.onmessage = function(event) {
+        handleMessage(event);
+      }
+      
+      function handleMessage(event) {
+        console.log('[Worker]', 'Worker Thread receives command: ', event.data.cmd, event.data.msg);
+        if(event.data.cmd == 'start') {
+          for(var i = 0; i <= 10000000000; i++) {
+            if(i % 1000000000 == 0) postMessage({cmd : 'resp', msg: i});
+          }
+        }
+        else if(event.data.cmd == 'stop') {
+          postMessage({cmd : 'stop', msg: 'Good Bye!'});
+          self.close();
+        }
+      }
+    </script>
+  </body>
+</html>
